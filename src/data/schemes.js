@@ -71,8 +71,10 @@ function wi(items) {
 const GI = {
   '总览首页': 'GridIcon',
   '总览': 'ReaderIcon',
+  '组织架构': 'LayersIcon',
   '政府组织': 'LayersIcon',
   '服务对象': 'PersonIcon',
+  '监管对象': 'PersonIcon',
   '业务办理': 'ClipboardIcon',
   '协同联动': 'Share1Icon',
   '宣教培训': 'BookmarkIcon',
@@ -185,13 +187,13 @@ const SCHEMES = [
     key: 'goal',
     label: '方案一｜按工作目标',
     logicTitle: '方案逻辑说明',
-    logic: '这个方案的核心是降低理解成本，先解决"入口到底属于哪类工作"。',
+    logic: '这个方案的核心是降低理解成本，先解决"入口到底属于哪类工作"。根据实际服务目录重新整理分组，去掉了产品文档中不存在于系统的虚构菜单名。',
     points: [
-      '分类标准清楚：一级菜单统一按工作目标划分，同时区分政府内部组织和外部服务对象，不再把报表、单位、动作、配置混在同一层',
-      '迁移成本较低：现有菜单大多可以被归入新分组，不需要立即重构底层业务逻辑',
-      '适合管理后台：传统后台用户能接受这种结构，客户讲解和研发落地都相对稳',
+      '分类标准清楚：一级菜单统一按工作入口划分，总览首页、组织架构、监管对象、业务办理各司其职',
+      '与实际服务目录对齐：每个分组和菜单项都对应服务目录中的真实功能，不再使用虚构的菜单名',
+      '适合第一版落地：功能已按真实业务归类，用户能找到、研发能对应',
     ],
-    direction: '优先作为第一版推荐方案｜保留传统后台心智｜后续再向任务链路演进',
+    direction: '按工作入口重组，适合第一版落地｜后续可根据业务对象或任务链路演进',
     nav: g([
       {
         title: '总览首页',
@@ -203,22 +205,19 @@ const SCHEMES = [
         ]),
       },
       {
-        title: '政府组织',
+        title: '组织架构',
         items: wi([
-          { id: 'org-structure', label: '组织架构' },
           { id: 'liangzhu', label: '良渚街道' },
-          { id: 'account-mgmt', label: '后台账号管理' },
-          { id: 'role-mgmt', label: '角色管理' },
         ]),
       },
       {
-        title: '服务对象',
+        title: '监管对象',
         items: wi([
           { id: 'unit-contacts', label: '服务单位通讯录' },
           { id: 'enterprise-contacts', label: '企业通讯录' },
-          { id: 'whistle-contacts', label: '吹哨小分队通讯录' },
-          { id: 'household-query', label: '一户式查询' },
           { id: 'nine-small-contacts', label: '九小场所通讯录' },
+          { id: 'household-query', label: '一户式查询' },
+          { id: 'whistle-contacts', label: '吹哨小分队通讯录' },
           { id: 'tags', label: '标签管理' },
         ]),
       },
@@ -230,14 +229,13 @@ const SCHEMES = [
           { id: 'work-ticket', label: '作业票报备' },
           { id: 'hazard-rectify', label: '隐患监督整改', badge: '8' },
           { id: 'audit-center', label: '审核中心', badge: '5' },
-          { id: 'work-assign', label: '工作分配管理' },
+          { id: 'my-signature', label: '我的签名' },
         ]),
       },
       {
         title: '协同联动',
         items: wi([
           { id: 'joint-defense', label: '防消联勤' },
-          { id: 'whistle-contacts', label: '吹哨小分队通讯录' },
           { id: 'precise-push', label: '精准推送' },
         ]),
       },
@@ -252,14 +250,15 @@ const SCHEMES = [
         title: '统计分析',
         items: wi([
           { id: 'stats', label: '数据统计' },
-          { id: 'digital-cockpit', label: '数字驾驶舱' },
           { id: 'work-eval', label: '工作评价' },
+          { id: 'digital-cockpit', label: '数字驾驶舱' },
         ]),
       },
       {
         title: '系统管理',
         items: wi([
           { id: 'org-settings', label: '组织设置' },
+          { id: 'admin-change', label: '主管理员变更' },
           { id: 'account-mgmt', label: '后台账号管理' },
           { id: 'role-mgmt', label: '角色管理' },
           { id: 'menu-mgmt', label: '菜单管理' },

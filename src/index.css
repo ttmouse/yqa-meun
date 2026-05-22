@@ -49,16 +49,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Sidebar scrollbar */
+/* Sidebar scrollbar — hidden but scrollable */
+.sidebar-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 .sidebar-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-.sidebar-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 2px;
-}
-.dark .sidebar-scroll::-webkit-scrollbar-thumb {
-  background: #475569;
+  display: none;
 }
 
 /* Smooth sidebar transitions */

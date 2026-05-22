@@ -42,8 +42,8 @@ function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }
         <button
           onClick={handleClick}
           className={`
-            group relative flex w-full items-center gap-2.5 py-2 pr-3 text-left text-sm
-            transition-all duration-150 ease-out font-medium rounded-lg
+            group relative flex w-full items-center gap-2.5 py-2.5 pr-3 text-left text-sm
+            transition-all duration-150 ease-out font-medium rounded-lg mb-0.5
             ${isActive
               ? 'text-emerald-600 dark:text-white bg-emerald-50 dark:bg-[#2563eb]'
               : 'text-slate-600 dark:text-[#cbd5e1] hover:bg-slate-50 dark:hover:bg-[#1e293b] dark:hover:text-white'
@@ -104,10 +104,10 @@ function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }
       <button
         onClick={() => onSelect(item.id)}
         className={`
-          group relative flex w-full items-center gap-2.5 py-2 pr-3 text-left text-sm font-medium
-          transition-all duration-150 ease-out rounded-md
+          group relative flex w-full items-center gap-2.5 py-2.5 pr-3 text-left text-sm font-medium
+          transition-all duration-150 ease-out rounded-md mb-0.5
           ${isActive
-            ? 'dark:bg-[rgba(59,130,246,0.2)] dark:text-white dark:ring-1 dark:ring-[rgba(59,130,246,0.25)] bg-emerald-50 text-emerald-700'
+            ? 'dark:bg-[#2563eb] dark:text-white bg-emerald-50 text-emerald-600'
             : 'text-slate-600 dark:text-[#94a3b8] hover:bg-slate-50 dark:hover:bg-[#0f172a] dark:hover:text-white'
           }
         `}
@@ -134,7 +134,7 @@ function NavSection({ section, activeId, onSelect, expandedId, onToggle, search 
   return (
     <div>
       {section.title && (
-        <div className="px-3 pt-4 pb-1">
+        <div className="px-3 pt-5 pb-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-slate-400 dark:text-slate-500">
             {section.title}
           </span>
@@ -211,7 +211,7 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto sidebar-scroll px-2 pb-4">
+      <nav className="flex-1 overflow-y-auto sidebar-scroll px-2 pb-6">
         {scheme.nav.map((section, i) => (
           <NavSection
             key={section.title || `s-${i}`}
