@@ -33,7 +33,7 @@ sshpass -p "$SERVER_PASS" scp -o StrictHostKeyChecking=no -o PreferredAuthentica
 echo "🛠️ 服务器解压并更新（写入已挂载目录）..."
 sshpass -p "$SERVER_PASS" ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password $SERVER_USER@$SERVER_IP "
   mkdir -p $REMOTE_DIR
-  tar -xzf /root/dist.tar.gz -C $REMOTE_DIR
+  tar -xzf /root/dist.tar.gz -C $REMOTE_DIR --strip-components=1
   rm /root/dist.tar.gz
   # 重启 nginx 容器使配置生效
   docker restart twitter-hot-frontend-1

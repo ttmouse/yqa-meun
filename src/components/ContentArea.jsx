@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Icon from './Icon'
 
 const ITEM_PREVIEWS = {
@@ -40,6 +41,8 @@ const ITEM_PREVIEWS = {
 }
 
 export default function ContentArea({ scheme, dark, onToggleDark }) {
+  const [userOpen, setUserOpen] = useState(false)
+
   if (!scheme) return null
 
   const firstId = (() => {
@@ -99,15 +102,44 @@ export default function ContentArea({ scheme, dark, onToggleDark }) {
             <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-        {/* Login account */}
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-            <span className="text-[11px] font-semibold text-emerald-600">张</span>
-          </div>
-          <span className="text-sm text-slate-700 font-medium">张明</span>
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="text-slate-300">
-            <path d="M2.5 3.5L5 6.5L7.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+        {/* User dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setUserOpen(!userOpen)}
+            className="flex items-center gap-2 relative"
+          >
+            <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
+              <span className="text-[11px] font-semibold text-emerald-600">张</span>
+            </div>
+            <span className="text-sm text-slate-700 font-medium">张明</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="text-slate-300">
+              <path d="M2.5 3.5L5 6.5L7.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {userOpen && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setUserOpen(false)} />
+              <div className="absolute right-0 top-full mt-2 z-20 bg-white rounded-lg border border-slate-200 shadow-lg py-1 min-w-[140px]">
+                <button
+                  onClick={() => setUserOpen(false)}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                >
+                  <Icon name="Pencil2Icon" size={14} />
+                  <span>我的签名</span>
+                </button>
+                <div className="border-t border-slate-100 my-1" />
+                <button
+                  onClick={() => setUserOpen(false)}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="text-slate-400">
+                    <path d="M5 10L2.5 7L5 4M2.5 7H10.5M9 2.5L11 2.5C11.8284 2.5 12.5 3.17157 12.5 4V10C12.5 10.8284 11.8284 11.5 11 11.5H9" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span>退出登录</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

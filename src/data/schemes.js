@@ -18,6 +18,12 @@ const I = {
   tags: 'DotsVerticalIcon',
   'household-query': 'MagnifyingGlassIcon',
   'nine-small-contacts': 'HomeIcon',
+  'group-org': 'LayersIcon',
+  'group-targets': 'PersonIcon',
+  'group-work': 'ClipboardIcon',
+  'group-education': 'BookmarkIcon',
+  'group-stats': 'BarChartIcon',
+  'group-settings': 'GearIcon',
   'business-work': 'ClipboardIcon',
   'daily-supervise': 'MagnifyingGlassIcon',
   'inspect-check': 'CheckCircledIcon',
@@ -187,85 +193,57 @@ const SCHEMES = [
     key: 'goal',
     label: '方案一｜按工作目标',
     logicTitle: '方案逻辑说明',
-    logic: '这个方案的核心是降低理解成本，先解决"入口到底属于哪类工作"。根据实际服务目录重新整理分组，去掉了产品文档中不存在于系统的虚构菜单名。',
+    logic: '依据实际服务目录按工作入口重组导航，数据驾驶舱作为首页着陆入口，工作简报即工作台。所有菜单项对应服务目录中的真实功能，不再使用虚构的菜单名。',
     points: [
-      '分类标准清楚：一级菜单统一按工作入口划分，总览首页、组织架构、监管对象、业务办理各司其职',
-      '与实际服务目录对齐：每个分组和菜单项都对应服务目录中的真实功能，不再使用虚构的菜单名',
-      '适合第一版落地：功能已按真实业务归类，用户能找到、研发能对应',
+      '数据驾驶舱作为一级入口：直接展示，不再藏在分组下',
+      '业务办理整合完整链路：日常监管→监督检查→审核中心→隐患整改→作业票报备→工作分配→防消联勤，一条线贯通',
+      '统计分析聚焦看数：安全月报、数据看板、镇街检查统计、工作评价',
+      '系统管理收拢配置：组织设置、账号角色、菜单主页等全部集中',
     ],
     direction: '按工作入口重组，适合第一版落地｜后续可根据业务对象或任务链路演进',
-    nav: g([
+    nav: [
       {
-        title: '总览首页',
+        title: '',
         items: wi([
-          { id: 'briefing', label: '工作简报' },
           { id: 'cockpit', label: '数据驾驶舱' },
-          { id: 'monthly', label: '安全月报' },
-          { id: 'dashboard', label: '数据看板' },
-        ]),
-      },
-      {
-        title: '组织架构',
-        items: wi([
-          { id: 'liangzhu', label: '良渚街道' },
-        ]),
-      },
-      {
-        title: '监管对象',
-        items: wi([
-          { id: 'unit-contacts', label: '服务单位通讯录' },
-          { id: 'enterprise-contacts', label: '企业通讯录' },
-          { id: 'nine-small-contacts', label: '九小场所通讯录' },
-          { id: 'household-query', label: '一户式查询' },
-          { id: 'whistle-contacts', label: '吹哨小分队通讯录' },
-          { id: 'tags', label: '标签管理' },
-        ]),
-      },
-      {
-        title: '业务办理',
-        items: wi([
-          { id: 'daily-supervise', label: '日常监管' },
-          { id: 'inspect-check', label: '监督检查' },
-          { id: 'work-ticket', label: '作业票报备' },
-          { id: 'hazard-rectify', label: '隐患监督整改', badge: '8' },
-          { id: 'audit-center', label: '审核中心', badge: '5' },
-          { id: 'my-signature', label: '我的签名' },
-        ]),
-      },
-      {
-        title: '协同联动',
-        items: wi([
-          { id: 'joint-defense', label: '防消联勤' },
+          { id: 'briefing', label: '工作简报（工作台）' },
+          { id: 'org-structure', label: '组织架构' },
+          { id: 'group-targets', label: '监管对象', children: [
+            { id: 'enterprise-contacts', label: '责任主体通讯录（企业通讯录）' },
+            { id: 'nine-small-contacts', label: '九小场所通讯录' },
+            { id: 'tags', label: '标签管理' },
+          ]},
+          { id: 'group-work', label: '业务办理', children: [
+            { id: 'daily-supervise', label: '日常监管' },
+            { id: 'inspect-check', label: '监督检查' },
+            { id: 'audit-center', label: '审核中心', badge: '5' },
+            { id: 'hazard-rectify', label: '隐患监督整改', badge: '8' },
+            { id: 'work-ticket', label: '作业票报备' },
+            { id: 'work-assign', label: '工作分配管理' },
+            { id: 'joint-defense', label: '防消联勤' },
+          ]},
+          { id: 'group-education', label: '宣教培训', children: [
+            { id: 'emergency-cloud', label: '应急云学堂' },
+            { id: 'consolidate', label: '固本强基培训' },
+          ]},
           { id: 'precise-push', label: '精准推送' },
+          { id: 'group-stats', label: '统计分析', children: [
+            { id: 'monthly', label: '安全月报' },
+            { id: 'dashboard', label: '数据看板' },
+            { id: 'town-check-stats', label: '镇街检查统计', deprecated: true },
+            { id: 'work-eval', label: '工作评价' },
+          ]},
+          { id: 'group-settings', label: '系统管理', children: [
+            { id: 'org-settings', label: '组织设置' },
+            { id: 'admin-change', label: '主管理员变更' },
+            { id: 'account-mgmt', label: '后台账号管理' },
+            { id: 'role-mgmt', label: '角色管理' },
+            { id: 'menu-mgmt', label: '菜单管理' },
+            { id: 'home-config', label: '主页配置' },
+          ]},
         ]),
       },
-      {
-        title: '宣教培训',
-        items: wi([
-          { id: 'emergency-cloud', label: '应急云学堂' },
-          { id: 'consolidate', label: '固本强基' },
-        ]),
-      },
-      {
-        title: '统计分析',
-        items: wi([
-          { id: 'stats', label: '数据统计' },
-          { id: 'work-eval', label: '工作评价' },
-          { id: 'digital-cockpit', label: '数字驾驶舱' },
-        ]),
-      },
-      {
-        title: '系统管理',
-        items: wi([
-          { id: 'org-settings', label: '组织设置' },
-          { id: 'admin-change', label: '主管理员变更' },
-          { id: 'account-mgmt', label: '后台账号管理' },
-          { id: 'role-mgmt', label: '角色管理' },
-          { id: 'menu-mgmt', label: '菜单管理' },
-          { id: 'home-config', label: '主页配置' },
-        ]),
-      },
-    ]),
+    ],
   },
 
   // ================================================================
