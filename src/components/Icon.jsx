@@ -37,6 +37,9 @@ import {
   GridIcon,
   LayersIcon,
   ListBulletIcon,
+  UpdateIcon,
+  ArchiveIcon,
+  DownloadIcon,
 } from '@radix-ui/react-icons'
 
 const ICON_MAP = {
@@ -78,6 +81,9 @@ const ICON_MAP = {
   GridIcon,
   LayersIcon,
   ListBulletIcon,
+  UpdateIcon,
+  ArchiveIcon,
+  DownloadIcon,
 }
 
 export default function Icon({ name, className = '', size = 16 }) {

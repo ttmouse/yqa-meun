@@ -1,49 +1,48 @@
-import { useState, useCallback } from 'react'
-import { PROPOSALS } from './data/menus'
-import TopBar from './components/TopBar'
+import { useState, useCallback, useMemo } from 'react'
+import SCHEMES from './data/schemes'
 import Sidebar from './components/Sidebar'
 import ContentArea from './components/ContentArea'
 
 export default function App() {
-  const [activeProposalId, setActiveProposalId] = useState(PROPOSALS[0].id)
-  const [activeItemId, setActiveItemId] = useState('briefing')
+  const [activeKey, setActiveKey] = useState(SCHEMES[0].key)
+  const [activeItemId, setActiveItemId] = useState('')
 
-  const activeProposal = PROPOSALS.find((p) => p.id === activeProposalId)
+  const scheme = useMemo(() => SCHEMES.find((s) => s.key === activeKey), [activeKey])
 
-  const handleSwitchProposal = useCallback((id) => {
-    setActiveProposalId(id)
-    // Reset to first item's id when switching proposal
-    const proposal = PROPOSALS.find((p) => p.id === id)
-    if (proposal) {
-      const firstItem = proposal.sections
-        .flatMap((s) => s.items)
-        .find((i) => i.variant !== 'optional')
-      if (firstItem) setActiveItemId(firstItem.id)
+  const handleSwitch = useCallback((key) => {
+    setActiveKey(key)
+    const next = SCHEMES.find((s) => s.key === key)
+    if (next) {
+      for (const group of next.nav) {
+        for (const item of group.items) {
+          if (!item.children) {
+            setActiveItemId(item.id)
+            return
+          }
+          if (item.children && item.children.length > 0) {
+            setActiveItemId(item.children[0].id)
+            return
+          }
+        }
+      }
     }
   }, [])
 
-  const handleSelectItem = useCallback((id) => {
+  const handleSelect = useCallback((id) => {
     setActiveItemId(id)
   }, [])
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#f9fafb] overflow-hidden">
-      <TopBar
-        proposals={PROPOSALS}
-        activeId={activeProposalId}
-        onSwitch={handleSwitchProposal}
+    <div className="h-screen w-screen flex bg-white overflow-hidden">
+      <Sidebar
+        schemes={SCHEMES}
+        scheme={scheme}
+        activeKey={activeKey}
+        activeId={activeItemId}
+        onSelect={handleSelect}
+        onSwitch={(key) => handleSwitch(key)}
       />
-      <div className="flex flex-1 min-h-0">
-        <Sidebar
-          proposal={activeProposal}
-          activeId={activeItemId}
-          onSelect={handleSelectItem}
-        />
-        <ContentArea
-          activeId={activeItemId}
-          proposal={activeProposal}
-        />
-      </div>
+      <ContentArea scheme={scheme} />
     </div>
   )
 }
