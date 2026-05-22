@@ -1,7 +1,59 @@
 import Icon from './Icon'
 
-export default function ContentArea({ scheme }) {
+const ITEM_PREVIEWS = {
+  'briefing': { title: '工作简报', desc: '查看工作动态、关键指标和重点事项简报', tag: '' },
+  'cockpit': { title: '数据驾驶舱', desc: '全局数据可视化大屏，关键指标实时监控', tag: '' },
+  'monthly': { title: '安全月报', desc: '按月汇总安全数据，生成自动报告', tag: '' },
+  'dashboard': { title: '数据看板', desc: '自定义数据看板，关注核心指标变化', tag: '' },
+  'org-structure': { title: '组织架构', desc: '管理组织架构和单位层级关系', tag: '' },
+  'liangzhu': { title: '良渚街道', desc: '良渚街道信息与相关管理', tag: '' },
+  'unit-contacts': { title: '服务单位通讯录', desc: '管理所有服务单位联系信息', tag: '' },
+  'enterprise-contacts': { title: '企业通讯录', desc: '企业联系人信息管理', tag: '' },
+  'whistle-contacts': { title: '吹哨小分队通讯录', desc: '吹哨小分队成员联系信息', tag: '' },
+  'nine-small-contacts': { title: '九小场所通讯录', desc: '九小场所联系人信息管理', tag: '' },
+  'household-query': { title: '一户式查询', desc: '按户为单位综合查询相关信息', tag: '' },
+  'tags': { title: '标签管理', desc: '创建和管理分类标签体系', tag: '' },
+  'daily-supervise': { title: '日常监管', desc: '开展日常巡查、检查任务分配与执行跟踪', tag: '' },
+  'inspect-check': { title: '监督检查', desc: '执行监督检查任务，记录检查结果', tag: '' },
+  'work-eval': { title: '工作评价', desc: '评价和反馈工作完成质量', tag: '' },
+  'work-assign': { title: '工作分配管理', desc: '分配工作任务，跟踪执行进度', tag: '' },
+  'audit-center': { title: '审核中心', desc: '集中审核各类审批流程', tag: '5 项待处理' },
+  'work-ticket': { title: '作业票报备', desc: '作业票申请、审批与备案管理', tag: '' },
+  'hazard-rectify': { title: '隐患监督整改', desc: '跟踪隐患整改进度，超期预警督办', tag: '8 项待整改' },
+  'my-signature': { title: '我的签名', desc: '管理个人电子签名和签章', tag: '' },
+  'stats': { title: '数据统计', desc: '多维度数据统计与分析', tag: '' },
+  'town-check-stats': { title: '镇街检查统计', desc: '镇街消防安全检查数据统计（老页面，后续下线）', tag: '待下线' },
+  'joint-defense': { title: '防消联勤', desc: '防火监督与灭火救援联勤联动', tag: '' },
+  'joint-defense-page': { title: '防消联勤', desc: '防火监督与灭火救援联勤联动', tag: '' },
+  'digital-cockpit': { title: '数字驾驶舱', desc: '防消联勤专题数字驾驶舱', tag: '' },
+  'emergency-cloud': { title: '应急云学堂', desc: '在线学习和培训平台', tag: '' },
+  'consolidate': { title: '固本强基', desc: '基础能力建设和巩固提升', tag: '' },
+  'messages': { title: '消息触达', desc: '系统消息通知与送达管理', tag: '' },
+  'precise-push': { title: '精准推送', desc: '定向消息精准推送', tag: '' },
+  'settings': { title: '设置', desc: '系统全局设置', tag: '' },
+  'org-settings': { title: '组织设置', desc: '组织架构和单位信息配置', tag: '' },
+  'admin-change': { title: '主管理员变更', desc: '变更系统主管理员', tag: '' },
+  'account-mgmt': { title: '后台账号管理', desc: '管理后台用户账号', tag: '' },
+  'role-mgmt': { title: '角色管理', desc: '管理角色和权限分配', tag: '' },
+  'menu-mgmt': { title: '菜单管理', desc: '配置系统菜单结构', tag: '' },
+  'home-config': { title: '主页配置', desc: '配置系统首页内容和布局', tag: '' },
+}
+
+export default function ContentArea({ scheme, dark, onToggleDark }) {
   if (!scheme) return null
+
+  const firstId = (() => {
+    for (const group of scheme.nav) {
+      for (const item of group.items) {
+        if (!item.children) return item.id
+        if (item.children.length > 0) return item.children[0].id
+      }
+    }
+    return ''
+  })()
+
+  const activeId = firstId
+  const preview = ITEM_PREVIEWS[activeId] || { title: activeId, desc: '功能模块详情页', tag: '' }
 
   return (
     <main className="flex-1 flex flex-col bg-[#f8fafb] min-w-0">
@@ -23,6 +75,23 @@ export default function ContentArea({ scheme }) {
             <span>{item.label}</span>
           </button>
         ))}
+        {/* Theme toggle */}
+        <button
+          onClick={onToggleDark}
+          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+          title={dark ? '切换浅色模式' : '切换深色模式'}
+        >
+          {dark ? (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M8 1V3M8 13V15M1 8H3M13 8H15M3.5 3.5L5 5M11 11L12.5 12.5M3.5 12.5L5 11M11 5L12.5 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M13.5 9.5C12.5 11 10.5 12 8 12C4.5 12 2 9.5 2 6C2 5 2.2 4 2.8 3C1.5 4.5 1 6.5 1.5 8.5C2 11 4 13 6.5 13.5C8.5 14 10.5 13.5 12 12.5C12.5 12 13 11.5 13.5 9.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </button>
         {/* Organization switcher */}
         <div className="flex items-center gap-1.5 text-sm pl-5 border-l border-slate-200">
           <span className="text-slate-800 font-medium">良渚应急消防管理站</span>
@@ -42,12 +111,13 @@ export default function ContentArea({ scheme }) {
         </div>
       </div>
 
+      {/* Content */}
       <div className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-3xl mx-auto space-y-8">
 
           {/* ===== 方案逻辑说明 ===== */}
           <section>
-            <h2 className="text-base font-semibold text-slate-800 mb-3">{scheme.logicTitle}</h2>
+            <h2 className="text-base font-semibold text-slate-800 mb-3">方案逻辑说明</h2>
             <p className="text-sm text-slate-600 leading-relaxed">{scheme.logic}</p>
           </section>
 
@@ -55,18 +125,14 @@ export default function ContentArea({ scheme }) {
           <section>
             <h3 className="text-sm font-semibold text-slate-700 mb-3">说明</h3>
             <ul className="space-y-2.5">
-              {scheme.points.map((point, i) => {
-                const [num, ...rest] = point.split(' ')
-                const text = rest.join(' ')
-                return (
-                  <li key={i} className="flex gap-2.5 text-sm text-slate-600 leading-relaxed">
-                    <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-semibold flex items-center justify-center">
-                      {i + 1}
-                    </span>
-                    <span>{text}</span>
-                  </li>
-                )
-              })}
+              {scheme.points.map((point, i) => (
+                <li key={i} className="flex gap-2.5 text-sm text-slate-600 leading-relaxed">
+                  <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-semibold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                  <span>{point}</span>
+                </li>
+              ))}
             </ul>
           </section>
 
@@ -90,7 +156,34 @@ export default function ContentArea({ scheme }) {
             <h3 className="text-sm font-semibold text-slate-700 mb-3">结构总览</h3>
             <div className="bg-white rounded-xl border border-slate-200/70 overflow-hidden shadow-[0_1px_3px_-2px_rgba(0,0,0,0.05)]">
               {scheme.nav.map((group, gi) => (
-                group.title ? (
+                !group.title ? (
+                  <div key={gi}>
+                    {group.items.map((item) => (
+                      <div key={item.id}>
+                        <div className="px-5 py-2.5 bg-slate-50/80 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                          {item.label}
+                        </div>
+                        {item.children && (
+                          <div className="px-5 py-2 border-b border-slate-50 last:border-0">
+                            <div className="flex flex-wrap gap-x-4 gap-y-1">
+                              {item.children.map((child) => (
+                                <span key={child.id} className="text-sm text-slate-700 py-0.5">
+                                  {child.label}
+                                  {child.badge && (
+                                    <span className="ml-1 text-[10px] text-red-500 font-medium">({child.badge})</span>
+                                  )}
+                                  {child.deprecated && (
+                                    <span className="ml-1 text-[10px] text-slate-400">(老页面，下线)</span>
+                                  )}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
                   <div key={gi}>
                     <div className="px-5 py-2.5 bg-slate-50/80 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                       {group.title}
@@ -100,6 +193,11 @@ export default function ContentArea({ scheme }) {
                         {group.items.map((item) => (
                           <span key={item.id} className="text-sm text-slate-700 py-0.5">
                             {item.label}
+                            {item.children && (
+                              <span className="ml-1 text-[11px] text-slate-400">
+                                → {item.children.map(c => c.label).join('、')}
+                              </span>
+                            )}
                             {item.badge && (
                               <span className="ml-1 text-[10px] text-red-500 font-medium">({item.badge})</span>
                             )}
@@ -109,27 +207,6 @@ export default function ContentArea({ scheme }) {
                           </span>
                         ))}
                       </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div key={gi} className="px-5 py-2 border-b border-slate-50 last:border-0">
-                    <div className="flex flex-wrap gap-x-4 gap-y-1">
-                      {group.items.map((item) => (
-                        <span key={item.id} className="text-sm text-slate-700 py-0.5">
-                          {item.label}
-                          {item.children && (
-                            <span className="ml-1 text-[11px] text-slate-400">
-                              → {item.children.map(c => c.label).join('、')}
-                            </span>
-                          )}
-                          {item.badge && (
-                            <span className="ml-1 text-[10px] text-red-500 font-medium">({item.badge})</span>
-                          )}
-                          {item.deprecated && (
-                            <span className="ml-1 text-[10px] text-slate-400">(老页面，下线)</span>
-                          )}
-                        </span>
-                      ))}
                     </div>
                   </div>
                 )

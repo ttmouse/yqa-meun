@@ -57,6 +57,9 @@ body {
   background: #cbd5e1;
   border-radius: 2px;
 }
+.dark .sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #475569;
+}
 
 /* Smooth sidebar transitions */
 .sidebar-enter {

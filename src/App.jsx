@@ -6,6 +6,7 @@ import ContentArea from './components/ContentArea'
 export default function App() {
   const [activeKey, setActiveKey] = useState(SCHEMES[0].key)
   const [activeItemId, setActiveItemId] = useState('')
+  const [dark, setDark] = useState(false)
 
   const scheme = useMemo(() => SCHEMES.find((s) => s.key === activeKey), [activeKey])
 
@@ -34,15 +35,22 @@ export default function App() {
 
   return (
     <div className="h-screen w-screen flex bg-white overflow-hidden">
-      <Sidebar
-        schemes={SCHEMES}
+      <div className={dark ? 'dark' : ''}>
+        <Sidebar
+          schemes={SCHEMES}
+          scheme={scheme}
+          activeKey={activeKey}
+          activeId={activeItemId}
+          dark={dark}
+          onSelect={handleSelect}
+          onSwitch={(key) => handleSwitch(key)}
+        />
+      </div>
+      <ContentArea
         scheme={scheme}
-        activeKey={activeKey}
-        activeId={activeItemId}
-        onSelect={handleSelect}
-        onSwitch={(key) => handleSwitch(key)}
+        dark={dark}
+        onToggleDark={() => setDark(!dark)}
       />
-      <ContentArea scheme={scheme} />
     </div>
   )
 }
