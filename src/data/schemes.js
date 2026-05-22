@@ -67,6 +67,47 @@ function wi(items) {
   })
 }
 
+// Group icon map for section-titles-turned-menu-items
+const GI = {
+  '总览首页': 'GridIcon',
+  '总览': 'ReaderIcon',
+  '政府组织': 'LayersIcon',
+  '服务对象': 'PersonIcon',
+  '业务办理': 'ClipboardIcon',
+  '协同联动': 'Share1Icon',
+  '宣教培训': 'BookmarkIcon',
+  '统计分析': 'BarChartIcon',
+  '系统管理': 'GearIcon',
+  '辖区治理': 'LayersIcon',
+  '服务单位': 'HomeIcon',
+  '业务记录': 'ClipboardIcon',
+  '培训记录': 'BookmarkIcon',
+  '系统设置': 'GearIcon',
+  '工作台': 'CheckCircledIcon',
+  '监管检查': 'CheckCircledIcon',
+  '隐患闭环': 'ExclamationTriangleIcon',
+  '联勤联动': 'LightningBoltIcon',
+  '对象查询': 'MagnifyingGlassIcon',
+  '组织管理': 'LayersIcon',
+  '分析报表': 'BarChartIcon',
+}
+
+// Transform grouped sections into collapsible first-level items
+function g(sections) {
+  return [{
+    title: '',
+    items: sections.map((sec) => ({
+      id: 'g-' + sec.title.replace(/\s/g, ''),
+      label: sec.title,
+      icon: GI[sec.title] || 'ReaderIcon',
+      children: sec.items.map((item) => ({
+        ...item,
+        icon: I[item.id] || 'ReaderIcon',
+      })),
+    })),
+  }]
+}
+
 const SCHEMES = [
   // ================================================================
   // 现有结构
@@ -151,7 +192,7 @@ const SCHEMES = [
       '适合管理后台：传统后台用户能接受这种结构，客户讲解和研发落地都相对稳',
     ],
     direction: '优先作为第一版推荐方案｜保留传统后台心智｜后续再向任务链路演进',
-    nav: [
+    nav: g([
       {
         title: '总览首页',
         items: wi([
@@ -225,7 +266,7 @@ const SCHEMES = [
           { id: 'home-config', label: '主页配置' },
         ]),
       },
-    ],
+    ]),
   },
 
   // ================================================================
@@ -242,7 +283,7 @@ const SCHEMES = [
       '短期入口可能变深：如果用户只是想快速办一件事，按对象进入会多一层选择',
     ],
     direction: '适合做长期架构｜需要补齐对象模型｜高频业务入口要额外前置',
-    nav: [
+    nav: g([
       {
         title: '总览',
         items: wi([
@@ -303,7 +344,7 @@ const SCHEMES = [
           { id: 'home-config', label: '主页配置' },
         ]),
       },
-    ],
+    ]),
   },
 
   // ================================================================
@@ -320,7 +361,7 @@ const SCHEMES = [
       '不是简单改菜单：如果底层没有任务状态、流转状态、责任人机制，这个方案容易做成假工作台',
     ],
     direction: '适合第二阶段升级｜先验证高频任务链路｜不要只改菜单名，要改入口逻辑',
-    nav: [
+    nav: g([
       {
         title: '工作台',
         items: wi([
@@ -401,7 +442,7 @@ const SCHEMES = [
           { id: 'menu-mgmt', label: '菜单管理' },
         ]),
       },
-    ],
+    ]),
   },
 ]
 

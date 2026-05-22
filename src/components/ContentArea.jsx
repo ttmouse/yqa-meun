@@ -6,18 +6,8 @@ export default function ContentArea({ scheme }) {
   return (
     <main className="flex-1 flex flex-col bg-[#f8fafb] min-w-0">
       {/* Top bar */}
-      <div className="flex items-center justify-between h-14 px-6 border-b border-slate-200/70 bg-white shrink-0">
-        {/* Current organization — left side */}
-        <div className="flex items-center gap-1.5 text-sm">
-          <span className="text-slate-400">当前组织</span>
-          <span className="text-slate-800 font-medium">良渚应急消防管理站</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-slate-400 ml-0.5">
-            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        {/* Right side: entrance items + login */}
-        <div className="flex items-center gap-5">
-        {/* Entrance items — right aligned */}
+      <div className="flex items-center justify-end h-14 px-6 border-b border-slate-200/70 bg-white shrink-0 gap-5">
+        {/* Entrance items */}
         {[
           { id: 'messages', label: '消息中心', icon: 'BellIcon' },
           { id: 'guide', label: '操作指引', icon: 'ReaderIcon' },
@@ -33,8 +23,15 @@ export default function ContentArea({ scheme }) {
             <span>{item.label}</span>
           </button>
         ))}
+        {/* Organization switcher */}
+        <div className="flex items-center gap-1.5 text-sm pl-5 border-l border-slate-200">
+          <span className="text-slate-800 font-medium">良渚应急消防管理站</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="text-slate-400 ml-0.5">
+            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
         {/* Login account */}
-        <div className="flex items-center gap-2 pl-5 border-l border-slate-200">
+        <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
             <span className="text-[11px] font-semibold text-emerald-600">张</span>
           </div>
@@ -43,7 +40,6 @@ export default function ContentArea({ scheme }) {
             <path d="M2.5 3.5L5 6.5L7.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-      </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-6">

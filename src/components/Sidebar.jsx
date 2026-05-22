@@ -200,42 +200,58 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
         )}
       </nav>
 
-      {/* Mode switcher — expandable */}
-      <div className="border-t border-slate-100">
+      {/* Mode switcher — dropdown */}
+      <div className="relative border-t border-slate-100">
         <button
           onClick={() => setModeOpen(!modeOpen)}
-          className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-medium text-slate-500 hover:text-slate-700 transition-colors"
+          className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-medium text-slate-600 hover:text-slate-800 transition-colors"
         >
           <svg
             width="12" height="12" viewBox="0 0 12 12" fill="none"
-            className={`shrink-0 transition-transform duration-200 ${modeOpen ? 'rotate-90' : ''}`}
+            className="shrink-0 text-slate-400"
           >
-            <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <rect x="1.5" y="1.5" width="9" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+            <path d="M4 6H8M6 4V8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
           </svg>
-          <span className="flex-1">导航模式</span>
-          <span className="text-[10px] text-slate-400 truncate max-w-[100px]">{currentLabel}</span>
+          <span className="flex-1 truncate">{currentLabel}</span>
+          <svg
+            width="10" height="10" viewBox="0 0 10 10" fill="none"
+            className={`shrink-0 text-slate-400 transition-transform duration-200 ${modeOpen ? 'rotate-180' : ''}`}
+          >
+            <path d="M2.5 3.5L5 6.5L7.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </button>
         {modeOpen && (
-          <div className="px-3 pb-2 space-y-0.5">
-            {schemes.map((s) => (
-              <button
-                key={s.key}
-                onClick={() => { onSwitch(s.key); setModeOpen(false) }}
-                className={`
-                  flex w-full items-center gap-2 px-2.5 py-1.5 rounded-md text-xs transition-all duration-150 text-left
-                  ${activeKey === s.key
-                    ? 'bg-emerald-50 text-emerald-700 font-medium'
-                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-                  }
-                `}
-              >
-                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                  activeKey === s.key ? 'bg-emerald-500' : 'bg-slate-300'
-                }`} />
-                <span>{s.label}</span>
-              </button>
-            ))}
-          </div>
+          <>
+            {/* Overlay backdrop to close */}
+            <div className="fixed inset-0 z-10" onClick={() => setModeOpen(false)} />
+            {/* Dropdown panel */}
+            <div className="absolute bottom-full left-2 right-2 mb-1 z-20 bg-white rounded-lg border border-slate-200 shadow-lg py-1">
+              {schemes.map((s) => (
+                <button
+                  key={s.key}
+                  onClick={() => { onSwitch(s.key); setModeOpen(false) }}
+                  className={`
+                    flex w-full items-center gap-2 px-3 py-2 text-xs transition-all duration-150 text-left
+                    ${activeKey === s.key
+                      ? 'bg-emerald-50 text-emerald-700 font-medium'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                    }
+                  `}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                    activeKey === s.key ? 'bg-emerald-500' : 'bg-slate-300'
+                  }`} />
+                  <span>{s.label}</span>
+                  {activeKey === s.key && (
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="ml-auto text-emerald-500">
+                      <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </aside>
