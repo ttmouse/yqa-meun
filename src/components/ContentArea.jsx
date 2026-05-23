@@ -38,24 +38,53 @@ const ITEM_PREVIEWS = {
   'role-mgmt': { title: '角色管理', desc: '管理角色和权限分配', tag: '' },
   'menu-mgmt': { title: '菜单管理', desc: '配置系统菜单结构', tag: '' },
   'home-config': { title: '主页配置', desc: '配置系统首页内容和布局', tag: '' },
+
+  // === 以下为容器/父级菜单（展开用） ===
+  'education': { title: '宣教培训', desc: '查看宣教培训相关功能', tag: '' },
+  'business-work': { title: '业务工作', desc: '日常业务办理与管理', tag: '' },
+  'group-org': { title: '政府组织', desc: '管理政府组织结构', tag: '' },
+  'group-targets': { title: '监管对象', desc: '管理监管对象信息', tag: '' },
+  'group-work': { title: '业务办理', desc: '业务办理入口合集', tag: '' },
+  'group-education': { title: '宣教培训', desc: '宣教培训入口合集', tag: '' },
+  'group-stats': { title: '统计分析', desc: '数据统计与分析看板', tag: '' },
+  'group-settings': { title: '系统管理', desc: '系统配置与管理', tag: '' },
+
+  // === 方案二/三新增 ===
+  'area-overview': { title: '区域概况', desc: '辖区区域综合概况', tag: '' },
+  'risk-distribution': { title: '风险分布', desc: '消防安全风险分布可视化', tag: '' },
+  'todo': { title: '今日待办', desc: '待办任务汇总，快速处理', tag: '16 项待办' },
+  'pending-audit': { title: '待审核', desc: '等待审核的流程与申请', tag: '5 项待处理' },
+  'pending-rectify': { title: '待整改', desc: '待完成的隐患整改任务', tag: '8 项待整改' },
+  'pending-deliver': { title: '待送达', desc: '待送达的通知与文件', tag: '' },
+  'review-recheck': { title: '整改复查', desc: '对已完成整改进行复查核实', tag: '' },
+  'closed-archive': { title: '闭环归档', desc: '已完成事项的归档管理', tag: '' },
+  'training-record': { title: '培训记录', desc: '查看历史培训记录', tag: '' },
+
+  // === g- 分组标题（方案二/三的折叠分组） ===
+  'g-总览': { title: '总览', desc: '全局概览与数据驾驶', tag: '' },
+  'g-政府组织': { title: '政府组织', desc: '政府组织架构管理', tag: '' },
+  'g-辖区治理': { title: '辖区治理', desc: '辖区消防安全治理', tag: '' },
+  'g-服务单位': { title: '服务单位', desc: '服务单位信息管理', tag: '' },
+  'g-业务记录': { title: '业务记录', desc: '业务办理记录查询', tag: '' },
+  'g-培训记录': { title: '培训记录', desc: '培训活动记录管理', tag: '' },
+  'g-系统设置': { title: '系统设置', desc: '系统全局设置', tag: '' },
+  'g-工作台': { title: '工作台', desc: '任务一站式处理中心', tag: '' },
+  'g-监管检查': { title: '监管检查', desc: '监督检查任务管理', tag: '' },
+  'g-隐患闭环': { title: '隐患闭环', desc: '隐患全流程闭环管理', tag: '' },
+  'g-联勤联动': { title: '联勤联动', desc: '防消联勤协同工作', tag: '' },
+  'g-宣教培训': { title: '宣教培训', desc: '宣教培训活动管理', tag: '' },
+  'g-对象查询': { title: '对象查询', desc: '多维度对象信息查询', tag: '' },
+  'g-组织管理': { title: '组织管理', desc: '组织架构与人员管理', tag: '' },
+  'g-分析报表': { title: '分析报表', desc: '数据分析与报表查看', tag: '' },
+  'g-系统管理': { title: '系统管理', desc: '系统后台配置管理', tag: '' },
 }
 
-export default function ContentArea({ scheme, dark, onToggleDark }) {
+export default function ContentArea({ scheme, activeItemId, dark, onToggleDark }) {
   const [userOpen, setUserOpen] = useState(false)
 
   if (!scheme) return null
 
-  const firstId = (() => {
-    for (const group of scheme.nav) {
-      for (const item of group.items) {
-        if (!item.children) return item.id
-        if (item.children.length > 0) return item.children[0].id
-      }
-    }
-    return ''
-  })()
-
-  const activeId = firstId
+  const activeId = activeItemId
   const preview = ITEM_PREVIEWS[activeId] || { title: activeId, desc: '功能模块详情页', tag: '' }
 
   return (

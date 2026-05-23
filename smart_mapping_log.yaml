@@ -1,0 +1,111 @@
+# Smart Mapping Session Log
+# 每次分析追加一条记录，永不删除。用于复盘 + 模式发现。
+
+sessions:
+  - id: "S001"
+    date: "2025-01-17"
+    trigger: "全面项目审计——部署 404 修复 + 代码质量检查"
+    scenario: "audit"
+    
+    patterns_checked:
+      - id: null
+        note: "初版，无反模式清单"
+    
+    findings:
+      - id: "P001"
+        title: "深色模式作用域断裂"
+        severity: "🔴"
+        files: ["src/App.jsx"]
+        detail: "dark class 只包了 Sidebar 的 div，ContentArea 在外部"
+        evidence: "App.jsx: <div className={dark?'dark':''}> 只包 Sidebar"
+        
+      - id: "P002"
+        title: "ContentArea 不响应选中"
+        severity: "🔴"
+        files: ["src/ContentArea.jsx"]
+        detail: "ContentArea 未接收 activeItemId prop，始终显示第一个菜单"
+        evidence: "ContentArea.jsx: const activeId = firstId  // 忽略外部状态"
+        
+      - id: "P003"
+        title: "ITEM_PREVIEWS 完整性待验证"
+        severity: "🟡"
+        files: ["src/data/schemes.js", "src/components/ContentArea.jsx"]
+        detail: "需要遍历所有 id 确认 ITEM_PREVIEWS 全覆盖"
+        
+      - id: "P004"
+        title: "方案切换 expandedId 不重置"
+        severity: "🟡"
+        files: ["src/components/Sidebar.jsx"]
+        detail: "Sidebar 内部 expandedId state 在切换方案时不清零"
+        
+      - id: "P005"
+        title: "搜索匹配无高亮"
+        severity: "🟢"
+        files: ["src/components/Sidebar.jsx"]
+        detail: "搜索过滤后匹配文字没有 <mark> 高亮"
+        
+      - id: "P006"
+        title: "部署 tar 层级问题"
+        severity: "🔴"
+        files: ["deploy.sh"]
+        detail: "tar 解压不带 --strip-components=1，多一层 dist/"
+        status: "fixed"  # 已在上轮修了
+    
+    prompt_generated: |
+      修复 App.jsx 的 dark 包裹范围，将 <Sidebar /> 和 <ContentArea /> 
+      放在同一个 <div className={dark ? 'dark' : ''}> 内。
+      给 ContentArea 添加 activeItemId prop，从 App.jsx 传入。
+    
+    smart_mapping_update:
+      - "新增第 5 节「已知反模式」，记录 P001-P006"
+      - "新增第 6 节「迭代流程」"
+    
+    outcome: "待修复 P001-P005，P006 已修"
+
+  - id: "S002"
+    date: "2025-01-17"
+    trigger: "智能审核——按 smart_mapping 走分析流程发现 5 个 Bug 并修复"
+    scenario: "bugfix"
+    
+    patterns_checked:
+      - id: "P001"
+        status: "fixed"
+        fix: "App.jsx: dark class 外移到最外层 div，包裹 Sidebar + ContentArea"
+        commit: "未提交"
+      - id: "P002"
+        status: "fixed"
+        fix: "ContentArea.jsx: 接收 activeItemId prop，替代 self-computed firstId；App.jsx 传入 activeItemId"
+        commit: "未提交"
+      - id: "P003"
+        status: "fixed"
+        fix: "ContentArea.jsx ITEM_PREVIEWS 新增 33 条缺失条目（容器/方案二/方案三/ g- 分组）"
+        commit: "未提交"
+      - id: "P004"
+        status: "fixed"
+        fix: "Sidebar.jsx: 加 useEffect 监听 activeKey 变化，重置 expandedId + search"
+        commit: "未提交"
+      - id: "P005"
+        status: "fixed"
+        fix: "Sidebar.jsx: 新增 highlightText 函数，在 NavItem 中给匹配文字包 <mark> 高亮"
+        commit: "未提交"
+      - id: "P006"
+        status: "verified"  # 确认仍为已修复状态
+        note: "上轮已修，本轮验证仍有效"
+    
+    new_findings: []
+    # 本轮未发现新反模式，5 个全部修复
+    
+    prompt_generated: |
+      按 smart_mapping.md 第 6 节分析规程执行：
+      1. 读日志 → 5 个活跃反模式
+      2. 逐个验证 → 5 个全部仍存在
+      3. 修复：P001(dark外移) + P002(activeItemId传递) + P003(ITEM_PREVIEWS补全) + P004(useEffect重置) + P005(高亮)
+      4. 构建验证通过
+    
+    smart_mapping_update:
+      - "第 4 节「活跃反模式」：P001-P005 标记 ✅ 已修复"
+      - "第 3 节「数据文件」：新增 smart_mapping_log.yaml 和 smart_mapping/sessions/"
+      - "第 6 节「分析运行规程」：细化 A-B-C-D 四步流程"
+      - "第 7 节「自迭代原理」：新增图解"
+    
+    outcome: "5/5 修复完成，P006 验证仍有效。文档自迭代闭环演示成功"

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Icon from './Icon'
 
 function matchItem(item, q) {
@@ -11,6 +11,21 @@ function matchItem(item, q) {
 function getMatchedChildren(item, q) {
   if (!q || !item.children) return item.children
   return item.children.filter((c) => c.label.toLowerCase().includes(q))
+}
+
+function highlightText(text, query) {
+  if (!query) return text
+  const idx = text.toLowerCase().indexOf(query.toLowerCase())
+  if (idx === -1) return text
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 rounded px-0.5">
+        {text.slice(idx, idx + query.length)}
+      </mark>
+      {text.slice(idx + query.length)}
+    </>
+  )
 }
 
 function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }) {
@@ -58,7 +73,7 @@ function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }
               <Icon name={item.icon} size={16} />
             </span>
           )}
-          <span className="truncate flex-1">{item.label}</span>
+          <span className="truncate flex-1">{highlightText(item.label, search)}</span>
           {item.deprecated && (
             <span className="shrink-0 text-[10px] text-slate-400 dark:text-slate-500 ml-1 whitespace-nowrap">老页面，下线</span>
           )}
@@ -113,7 +128,7 @@ function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }
         `}
         style={{ paddingLeft: padLeft }}
       >
-        <span className="truncate flex-1">{item.label}</span>
+        <span className="truncate flex-1">{highlightText(item.label, search)}</span>
         {item.deprecated && (
           <span className="shrink-0 text-[10px] text-slate-400 dark:text-slate-500 ml-1 whitespace-nowrap">老页面，下线</span>
         )}
@@ -160,6 +175,12 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
   const [expandedId, setExpandedId] = useState(null)
   const [search, setSearch] = useState('')
   const [modeOpen, setModeOpen] = useState(false)
+
+  // 切换方案时折叠所有展开的分组
+  useEffect(() => {
+    setExpandedId(null)
+    setSearch('')
+  }, [activeKey])
 
   if (!scheme) return null
 

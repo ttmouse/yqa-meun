@@ -34,8 +34,8 @@ export default function App() {
   }, [])
 
   return (
-    <div className="h-screen w-screen flex bg-white overflow-hidden">
-      <div className={dark ? 'dark' : ''}>
+    <div className={dark ? 'dark' : ''}>
+      <div className="h-screen w-screen flex bg-white dark:bg-slate-950 overflow-hidden">
         <Sidebar
           schemes={SCHEMES}
           scheme={scheme}
@@ -45,12 +45,13 @@ export default function App() {
           onSelect={handleSelect}
           onSwitch={(key) => handleSwitch(key)}
         />
+        <ContentArea
+          scheme={scheme}
+          activeItemId={activeItemId}
+          dark={dark}
+          onToggleDark={() => setDark(!dark)}
+        />
       </div>
-      <ContentArea
-        scheme={scheme}
-        dark={dark}
-        onToggleDark={() => setDark(!dark)}
-      />
     </div>
   )
 }
