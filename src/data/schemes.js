@@ -1,6 +1,8 @@
 /**
- * 四个导航方案的数据定义
+ * 导航方案数据定义
+ * 前4个方案为原有业务方案，后3个为导航架构方案（带 layoutType）
  * 每个方案包含：label / nav / logicTitle / logic / points / direction
+ * layoutType: side | icon | top | mix
  * 一级菜单含 icon（@radix-ui/react-icons 名称），二级菜单无图标
  */
 
@@ -60,6 +62,13 @@ const I = {
   'review-recheck': 'UpdateIcon',
   'closed-archive': 'ArchiveIcon',
   'training-record': 'BookmarkIcon',
+  // Demo menu icons
+  'demo-overview': 'ReaderIcon',
+  'demo-user': 'PersonIcon',
+  'demo-order': 'ClipboardIcon',
+  'demo-content': 'BookmarkIcon',
+  'demo-finance': 'BarChartIcon',
+  'demo-setting': 'GearIcon',
 }
 
 // Helper: add icon to a nav item
@@ -116,9 +125,53 @@ function g(sections) {
   }]
 }
 
+// ===== 通用示例菜单（给导航架构方案使用） =====
+const DEMO_NAV = wi([
+  { id: 'demo-overview', label: '总览', icon: 'ReaderIcon' },
+  { id: 'demo-user', label: '用户管理', icon: 'PersonIcon', children: [
+    { id: 'demo-user-list', label: '用户列表' },
+    { id: 'demo-user-role', label: '角色管理' },
+    { id: 'demo-user-perm', label: '权限配置' },
+  ]},
+  { id: 'demo-order', label: '订单管理', icon: 'ClipboardIcon', children: [
+    { id: 'demo-order-list', label: '订单列表' },
+    { id: 'demo-order-detail', label: '订单详情' },
+    { id: 'demo-order-refund', label: '退款管理' },
+  ]},
+  { id: 'demo-content', label: '内容管理', icon: 'BookmarkIcon', children: [
+    { id: 'demo-content-article', label: '文章管理' },
+    { id: 'demo-content-category', label: '分类管理' },
+    { id: 'demo-content-tag', label: '标签管理' },
+  ]},
+  { id: 'demo-finance', label: '财务管理', icon: 'BarChartIcon', children: [
+    { id: 'demo-finance-income', label: '收入概览' },
+    { id: 'demo-finance-bill', label: '账单管理' },
+    { id: 'demo-finance-invoice', label: '发票管理' },
+  ]},
+  { id: 'demo-setting', label: '系统设置', icon: 'GearIcon', children: [
+    { id: 'demo-setting-basic', label: '基础配置' },
+    { id: 'demo-setting-log', label: '日志查看' },
+    { id: 'demo-setting-notice', label: '系统公告' },
+  ]},
+])
+
+/**
+ * 辅助函数：展平嵌套的 nav 结构
+ * 用于 top/mix 模式取第一级菜单列表
+ */
+function getFirstLevelItems(scheme) {
+  const items = []
+  for (const section of scheme.nav) {
+    for (const item of section.items) {
+      items.push(item)
+    }
+  }
+  return items
+}
+
 const SCHEMES = [
   // ================================================================
-  // 现有结构
+  // 现有结构（原始方案，不修改）
   // ================================================================
   {
     key: 'current',
@@ -187,7 +240,7 @@ const SCHEMES = [
   },
 
   // ================================================================
-  // 方案一：按工作目标 ★ 推荐
+  // 方案一：按工作目标 ★ 推荐（原始方案，不修改）
   // ================================================================
   {
     key: 'goal',
@@ -247,7 +300,7 @@ const SCHEMES = [
   },
 
   // ================================================================
-  // 方案二：按业务对象
+  // 方案二：按业务对象（原始方案，不修改）
   // ================================================================
   {
     key: 'object',
@@ -325,7 +378,7 @@ const SCHEMES = [
   },
 
   // ================================================================
-  // 方案三：按任务链路
+  // 方案三：按任务链路（原始方案，不修改）
   // ================================================================
   {
     key: 'task',
@@ -421,6 +474,85 @@ const SCHEMES = [
       },
     ]),
   },
+
+  // ================================================================
+  // 方案五：图标侧栏（新架构）
+  // 左侧仅显示图标，hover 展开显示文字
+  // 类似 Vercel / Linear 风格
+  // ================================================================
+  {
+    key: 'icon-sidebar',
+    label: '方案五｜图标侧栏',
+    layoutType: 'icon',
+    logicTitle: '架构说明',
+    logic: '左侧仅保留图标菜单，鼠标悬停时展开显示完整文字。最大化内容展示区域，适合高频操作的 SaaS 型后台。',
+    points: [
+      '默认只显示图标，节省横向空间',
+      '鼠标悬停时展开完整菜单',
+      '最大化内容区域，聚焦工作内容',
+      '适合功能入口明确、操作频繁的系统',
+    ],
+    direction: '参考 Vercel / Linear / Supabase 等现代 SaaS 设计',
+    nav: [
+      {
+        title: '',
+        items: DEMO_NAV,
+      },
+    ],
+  },
+
+  // ================================================================
+  // 方案六：顶部主导航（新架构）
+  // 顶部一级导航，无侧边栏，内容区全宽
+  // 类似 Salesforce / Atlassian 风格
+  // ================================================================
+  {
+    key: 'top-nav',
+    label: '方案六｜顶部主导航',
+    layoutType: 'top',
+    logicTitle: '架构说明',
+    logic: '顶部放置一级导航菜单，无侧边栏。内容区全宽展示，适合模块数量少但每个模块功能深的系统。',
+    points: [
+      '顶部一级菜单清晰可见',
+      '无侧边栏，内容区 100% 宽度',
+      '二级菜单以下拉或子栏形式展示',
+      '适合 CRM、项目管理等模块深而少的系统',
+    ],
+    direction: '参考 Salesforce / Jira / Atlassian 设计',
+    nav: [
+      {
+        title: '',
+        items: DEMO_NAV,
+      },
+    ],
+  },
+
+  // ================================================================
+  // 方案七：混合导航（新架构）
+  // 顶部一级菜单 + 左侧当前模块子菜单
+  // 类似阿里云 / Ant Design Pro mix 风格
+  // ================================================================
+  {
+    key: 'mix-nav',
+    label: '方案七｜混合导航',
+    layoutType: 'mix',
+    logicTitle: '架构说明',
+    logic: '顶部切换模块，左侧显示当前模块的完整功能树。适合模块多且每个模块内部结构复杂的专业系统。',
+    points: [
+      '顶部一级导航切换大模块',
+      '左侧显示当前模块的完整子菜单',
+      'Tab 工作区在子页面之间切换',
+      '适合多模块专业平台（云平台/ERP）',
+    ],
+    direction: '参考阿里云控制台 / Ant Design Pro mix 布局',
+    nav: [
+      {
+        title: '',
+        items: DEMO_NAV,
+      },
+    ],
+  },
 ]
 
 export default SCHEMES
+export { getFirstLevelItems }

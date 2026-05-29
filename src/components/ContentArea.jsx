@@ -3,6 +3,7 @@ import Icon from './Icon'
 import WorkspaceTabs from './WorkspaceTabs'
 
 const ITEM_PREVIEWS = {
+  // ===== 原有业务方案 =====
   '__home__': { title: '首页', desc: '系统首页，欢迎使用管理后台', tag: '' },
   'briefing': { title: '工作简报', desc: '查看工作动态、关键指标和重点事项简报', tag: '' },
   'cockpit': { title: '数据驾驶舱', desc: '全局数据可视化大屏，关键指标实时监控', tag: '' },
@@ -79,15 +80,56 @@ const ITEM_PREVIEWS = {
   'g-组织管理': { title: '组织管理', desc: '组织架构与人员管理', tag: '' },
   'g-分析报表': { title: '分析报表', desc: '数据分析与报表查看', tag: '' },
   'g-系统管理': { title: '系统管理', desc: '系统后台配置管理', tag: '' },
+
+  // ===== 通用示例菜单 =====
+  'demo-overview': { title: '总览', desc: '系统整体运行概况与关键指标', tag: '' },
+  'demo-user': { title: '用户管理', desc: '用户、角色与权限统一管理', tag: '' },
+  'demo-user-list': { title: '用户列表', desc: '查看和管理系统所有用户', tag: '' },
+  'demo-user-role': { title: '角色管理', desc: '定义和管理系统角色', tag: '' },
+  'demo-user-perm': { title: '权限配置', desc: '细粒度权限分配与配置', tag: '' },
+  'demo-order': { title: '订单管理', desc: '订单全生命周期管理', tag: '' },
+  'demo-order-list': { title: '订单列表', desc: '查看和处理所有订单', tag: '' },
+  'demo-order-detail': { title: '订单详情', desc: '查看订单完整信息', tag: '' },
+  'demo-order-refund': { title: '退款管理', desc: '退款申请与审核处理', tag: '' },
+  'demo-content': { title: '内容管理', desc: '文章、分类与标签管理', tag: '' },
+  'demo-content-article': { title: '文章管理', desc: '发布和管理平台文章', tag: '' },
+  'demo-content-category': { title: '分类管理', desc: '管理内容分类体系', tag: '' },
+  'demo-content-tag': { title: '标签管理', desc: '管理内容标签', tag: '' },
+  'demo-finance': { title: '财务管理', desc: '收入、账单与发票管理', tag: '' },
+  'demo-finance-income': { title: '收入概览', desc: '查看财务收入总览', tag: '' },
+  'demo-finance-bill': { title: '账单管理', desc: '管理客户账单', tag: '' },
+  'demo-finance-invoice': { title: '发票管理', desc: '发票开具与核销', tag: '' },
+  'demo-setting': { title: '系统设置', desc: '系统基础配置与管理', tag: '' },
+  'demo-setting-basic': { title: '基础配置', desc: '系统基础参数配置', tag: '' },
+  'demo-setting-log': { title: '日志查看', desc: '查看系统操作日志', tag: '' },
+  'demo-setting-notice': { title: '系统公告', desc: '管理系统公告信息', tag: '' },
 }
 
-export default function ContentArea({ scheme, activeItemId, activeTabKey, tabs, dark, onToggleDark, onTabClick, onTabClose }) {
+export default function ContentArea({
+  scheme, activeItemId, activeTabKey, tabs, dark,
+  onToggleDark, onTabClick, onTabClose,
+  layoutType, topModuleKey, onTopNavClick,
+}) {
   const [userOpen, setUserOpen] = useState(false)
 
   if (!scheme) return null
 
   const activeId = activeItemId
   const preview = ITEM_PREVIEWS[activeId] || { title: activeId, desc: '功能模块详情页', tag: '' }
+
+  // 获取一级菜单列表（用在 top/mix 模式）
+  const firstLevelItems = []
+  for (const group of scheme.nav) {
+    for (const item of group.items) {
+      firstLevelItems.push(item)
+    }
+  }
+
+  // mix 模式下，判断传入的 topModuleKey 是否在一级菜单中
+  // 如果是，获取它的 children 作为当前模块的子菜单描述
+  const currentModule = layoutType === 'mix' && topModuleKey
+    ? firstLevelItems.find((i) => i.id === topModuleKey)
+    : null
 
   return (
     <main className="flex-1 flex flex-col bg-[#f8fafb] min-w-0">
@@ -174,6 +216,59 @@ export default function ContentArea({ scheme, activeItemId, activeTabKey, tabs, 
         </div>
       </div>
 
+      {/* Top / Mix 模式：顶部导航栏 */}
+      {(layoutType === 'top' || layoutType === 'mix') && (
+        <div className="flex shrink-0 bg-white border-b border-slate-200/70 px-4">
+          <div className="flex items-center gap-1 h-11 overflow-x-auto top-nav-scroll">
+            {firstLevelItems.map((item) => {
+              const isActive = layoutType === 'mix'
+                ? topModuleKey === item.id
+                : item.id === activeItemId || (item.children && item.children.some((c) => c.id === activeItemId))
+              const hasChildren = item.children && item.children.length > 0
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    if (hasChildren) {
+                      onTopNavClick(item.id, item.label)
+                    } else {
+                      onTopNavClick(item.id, item.label)
+                    }
+                  }}
+                  className={`
+                    flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap rounded-t-md transition-all duration-150 shrink-0
+                    ${isActive
+                      ? 'text-emerald-600 bg-emerald-50/80 font-medium border-b-2 border-emerald-500'
+                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50 border-b-2 border-transparent'
+                    }
+                  `}
+                >
+                  {item.icon && <Icon name={item.icon} size={15} />}
+                  <span>{item.label}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Mix 模式：模块子导航说明（当前选中的模块名称） */}
+      {layoutType === 'mix' && currentModule && (
+        <div className="flex items-center gap-2 px-6 py-2 text-xs text-slate-400 bg-white border-b border-slate-100/80 shrink-0">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <span>当前模块：</span>
+          {currentModule.icon && <Icon name={currentModule.icon} size={12} />}
+          <span className="text-slate-600 font-medium">{currentModule.label}</span>
+          {currentModule.children && currentModule.children.length > 0 && (
+            <span className="text-slate-300 ml-1">
+              · {currentModule.children.length} 个子页面
+            </span>
+          )}
+        </div>
+      )}
+
       {/* Workspace Tabs */}
       <WorkspaceTabs
         tabs={tabs}
@@ -188,7 +283,9 @@ export default function ContentArea({ scheme, activeItemId, activeTabKey, tabs, 
 
           {/* ===== 方案逻辑说明 ===== */}
           <section>
-            <h2 className="text-base font-semibold text-slate-800 mb-3">方案逻辑说明</h2>
+            <h2 className="text-base font-semibold text-slate-800 mb-3">
+              {scheme.logicTitle || '方案逻辑说明'}
+            </h2>
             <p className="text-sm text-slate-600 leading-relaxed">{scheme.logic}</p>
           </section>
 

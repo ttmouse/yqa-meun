@@ -211,6 +211,38 @@ body {
   background: rgba(239, 68, 68, 0.15);
 }
 
+/* ===== Icon Sidebar Mode (hover expand) ===== */
+.sidebar-icon-mode {
+  overflow: hidden !important;
+}
+
+.sidebar-icon-mode .sidebar-text {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.sidebar-icon-mode:hover {
+  width: 238px !important;
+}
+
+.sidebar-icon-mode:hover .sidebar-text {
+  opacity: 1;
+}
+
+/* ===== Mix Sidebar Mode ===== */
+.sidebar-mix-mode {
+  width: 200px !important;
+}
+
+/* ===== Top Nav Scrollbar ===== */
+.top-nav-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.top-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Smooth sidebar transitions */
 .sidebar-enter {
   opacity: 0;
