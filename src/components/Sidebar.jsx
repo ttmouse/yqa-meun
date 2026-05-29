@@ -46,8 +46,12 @@ function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }
     : item.children
 
   const handleClick = () => {
-    if (hasChildren) onToggle(item.id)
-    onSelect(item.id)
+    if (hasChildren) {
+      onToggle(item.id)
+      // 父级菜单只展开/折叠，不触发页面切换
+    } else {
+      onSelect(item.id, item.label)
+    }
   }
 
   // Level 0 = first-level menu
@@ -117,7 +121,7 @@ function NavItem({ item, depth, activeId, onSelect, expanded, onToggle, search }
   return (
     <>
       <button
-        onClick={() => onSelect(item.id)}
+        onClick={() => onSelect(item.id, item.label)}
         className={`
           group relative flex w-full items-center gap-2.5 py-2.5 pr-3 text-left text-sm font-medium
           transition-all duration-150 ease-out rounded-md mb-0.5
@@ -171,7 +175,7 @@ function NavSection({ section, activeId, onSelect, expandedId, onToggle, search 
   )
 }
 
-export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect, onSwitch, dark }) {
+export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect, onSwitch, dark, collapsed, onToggleCollapse }) {
   const [expandedId, setExpandedId] = useState(null)
   const [search, setSearch] = useState('')
   const [modeOpen, setModeOpen] = useState(false)
@@ -189,20 +193,26 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
     ? scheme.nav.some((s) => s.items.some((item) => matchItem(item, search)))
     : true
 
+  const SIDEBAR_WIDTH = 238
+  const COLLAPSED_WIDTH = 0
+
   return (
-    <aside className="w-[238px] min-w-[238px] h-full bg-white dark:bg-[#0f172a] border-r border-slate-200/70 dark:border-[rgba(255,255,255,0.1)] flex flex-col transition-colors duration-200">
+    <aside
+      className="relative h-full bg-white dark:bg-[#0f172a] border-r border-slate-200/70 dark:border-[rgba(255,255,255,0.1)] flex flex-col transition-all duration-300 ease-in-out overflow-hidden shrink-0"
+      style={{ width: collapsed ? COLLAPSED_WIDTH : SIDEBAR_WIDTH }}
+    >
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-4 h-14 border-b border-slate-100 dark:border-[rgba(255,255,255,0.1)] shrink-0">
-        <div className="w-7 h-7 rounded-lg bg-emerald-500 dark:bg-[#2563eb] flex items-center justify-center shadow-sm">
+      <div className={`flex items-center gap-2.5 px-4 h-14 border-b border-slate-100 dark:border-[rgba(255,255,255,0.1)] shrink-0 transition-opacity duration-200 ${collapsed ? 'opacity-0 pointer-events-none' : ''}`}>
+        <div className="w-7 h-7 rounded-lg bg-emerald-500 dark:bg-[#2563eb] flex items-center justify-center shadow-sm shrink-0">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M4 10L7 13L12 5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-        <span className="text-sm font-semibold text-slate-800 dark:text-white tracking-tight">一起安管理后台</span>
+        <span className="text-sm font-semibold text-slate-800 dark:text-white tracking-tight truncate">一起安管理后台</span>
       </div>
 
       {/* Search */}
-      <div className="px-3 pt-3 pb-2">
+      <div className={`px-3 pt-3 pb-2 transition-opacity duration-200 ${collapsed ? 'opacity-0 pointer-events-none' : ''}`}>
         <div className="relative">
           <svg
             width="14" height="14" viewBox="0 0 14 14" fill="none"
@@ -232,7 +242,7 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto sidebar-scroll px-2 pb-6">
+      <nav className={`flex-1 overflow-y-auto sidebar-scroll px-2 pb-6 transition-opacity duration-200 ${collapsed ? 'opacity-0 pointer-events-none' : ''}`}>
         {scheme.nav.map((section, i) => (
           <NavSection
             key={section.title || `s-${i}`}
@@ -252,7 +262,7 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
       </nav>
 
       {/* Mode switcher — dropdown */}
-      <div className="relative border-t dark:border-[rgba(255,255,255,0.1)] border-slate-100">
+      <div className={`relative border-t dark:border-[rgba(255,255,255,0.1)] border-slate-100 transition-opacity duration-200 ${collapsed ? 'opacity-0 pointer-events-none' : ''}`}>
         <button
           onClick={() => setModeOpen(!modeOpen)}
           className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-xs font-medium text-slate-600 dark:text-[#cbd5e1] hover:text-slate-800 dark:hover:text-white transition-colors"
@@ -303,6 +313,35 @@ export default function Sidebar({ schemes, scheme, activeKey, activeId, onSelect
           </>
         )}
       </div>
+
+      {/* Collapse toggle button — always visible, positioned at right edge */}
+      <button
+        onClick={onToggleCollapse}
+        className={`
+          absolute top-1/2 -translate-y-1/2 z-10
+          flex items-center justify-center
+          w-5 h-10
+          rounded-r-md
+          bg-white dark:bg-[#0f172a]
+          border border-slate-200 dark:border-[rgba(255,255,255,0.1)]
+          border-l-0
+          text-slate-400 dark:text-[#94a3b8]
+          hover:text-slate-600 dark:hover:text-white
+          hover:bg-slate-50 dark:hover:bg-[#1e293b]
+          transition-all duration-200
+          cursor-pointer
+          shadow-sm
+          ${collapsed ? 'left-0' : '-right-5'}
+        `}
+        title={collapsed ? '展开侧边栏' : '收起侧边栏'}
+      >
+        <svg
+          width="10" height="10" viewBox="0 0 10 10" fill="none"
+          className={`transition-transform duration-300 ${collapsed ? '' : 'scale-x-[-1]'}`}
+        >
+          <path d="M6.5 2L3.5 5L6.5 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
     </aside>
   )
 }

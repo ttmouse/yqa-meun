@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import Icon from './Icon'
+import WorkspaceTabs from './WorkspaceTabs'
 
 const ITEM_PREVIEWS = {
+  '__home__': { title: '首页', desc: '系统首页，欢迎使用管理后台', tag: '' },
   'briefing': { title: '工作简报', desc: '查看工作动态、关键指标和重点事项简报', tag: '' },
   'cockpit': { title: '数据驾驶舱', desc: '全局数据可视化大屏，关键指标实时监控', tag: '' },
   'monthly': { title: '安全月报', desc: '按月汇总安全数据，生成自动报告', tag: '' },
@@ -79,7 +81,7 @@ const ITEM_PREVIEWS = {
   'g-系统管理': { title: '系统管理', desc: '系统后台配置管理', tag: '' },
 }
 
-export default function ContentArea({ scheme, activeItemId, dark, onToggleDark }) {
+export default function ContentArea({ scheme, activeItemId, activeTabKey, tabs, dark, onToggleDark, onTabClick, onTabClose }) {
   const [userOpen, setUserOpen] = useState(false)
 
   if (!scheme) return null
@@ -171,6 +173,14 @@ export default function ContentArea({ scheme, activeItemId, dark, onToggleDark }
           )}
         </div>
       </div>
+
+      {/* Workspace Tabs */}
+      <WorkspaceTabs
+        tabs={tabs}
+        activeTabKey={activeTabKey}
+        onTabClick={onTabClick}
+        onTabClose={onTabClose}
+      />
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-6 py-6">

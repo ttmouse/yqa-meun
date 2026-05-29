@@ -58,6 +58,159 @@ body {
   display: none;
 }
 
+/* ===== Workspace Tabs ===== */
+.workspace-tabs {
+  display: flex;
+  align-items: stretch;
+  height: 40px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.workspace-tabs-scroll {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 4px;
+}
+
+.workspace-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.workspace-tabs-track {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-height: 100%;
+}
+
+.workspace-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  min-width: 80px;
+  max-width: 160px;
+  height: 100%;
+  font-size: 13px;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  border-right: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+  position: relative;
+  user-select: none;
+}
+
+.workspace-tab:not(:last-child) {
+  border-right-color: #edf2f7;
+}
+
+.workspace-tab-active:not(:last-child) {
+  border-right-color: transparent;
+}
+
+.workspace-tab:hover {
+  color: #334155;
+  background: #f1f5f9;
+}
+
+.workspace-tab-active {
+  color: #059669;
+  background: #ecfdf5;
+  border-bottom-color: #059669;
+  font-weight: 500;
+}
+
+.workspace-tab-active:hover {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.workspace-tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.workspace-tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: color 120ms ease, background 120ms ease;
+  opacity: 0;
+}
+
+.workspace-tab:hover .workspace-tab-close {
+  opacity: 0.6;
+}
+
+.workspace-tab .workspace-tab-close:hover {
+  opacity: 1;
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.workspace-tab-active .workspace-tab-close {
+  opacity: 0.5;
+}
+
+/* Dark mode — 蓝色弱化风格，与深蓝侧边栏协调 */
+.dark .workspace-tabs {
+  background: #f0f4f8;
+  border-bottom-color: #dce2ed;
+}
+
+.dark .workspace-tab {
+  color: #94a3b8;
+}
+
+.dark .workspace-tab:not(:last-child) {
+  border-right-color: #dce2ed;
+}
+
+.dark .workspace-tab-active:not(:last-child) {
+  border-right-color: transparent;
+}
+
+.dark .workspace-tab:hover {
+  color: #334155;
+  background: #ffffff;
+}
+
+.dark .workspace-tab-active {
+  color: #3b82f6;
+  background: #ffffff;
+  border-bottom-color: #3b82f6;
+}
+
+.dark .workspace-tab-active:hover {
+  background: #f8fafc;
+  color: #2563eb;
+}
+
+.dark .workspace-tab .workspace-tab-close:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
 /* Smooth sidebar transitions */
 .sidebar-enter {
   opacity: 0;

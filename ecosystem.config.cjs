@@ -1,6 +1,7 @@
 module.exports = {
   apps: [{
     name: 'yqa-meun',
+    cwd: '/Users/douba/Projects/YQA-meun',
     script: 'node_modules/.bin/serve',
     args: 'dist -p 4130',
     watch: false,
